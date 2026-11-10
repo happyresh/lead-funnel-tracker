@@ -11,7 +11,7 @@ from typing import NoReturn
 
 from lead_funnel.load import LoadError, LoadResult, load_leads
 from lead_funnel.metrics import default_week, parse_week, weekly_funnel
-from lead_funnel.report import write_report
+from lead_funnel.report import report_path, write_report
 from lead_funnel.synth import generate_leads, write_csv
 
 MAX_ROWS = 100_000
@@ -60,7 +60,7 @@ def _report(args: argparse.Namespace) -> int:
     result = load_leads(path)
     week = args.week or default_week(_today())
     funnel = weekly_funnel(result.leads, week)
-    target = out / f"funnel-{week}.xlsx"
+    target = report_path(out, week)
     try:
         write_report(funnel, result, path.name, out, args.force, datetime.now())
     except FileExistsError:
@@ -130,6 +130,7 @@ class _Parser(argparse.ArgumentParser):
     """Usage errors follow DESIGN.md section 3: Error: <problem>. <fix>."""
 
     def error(self, message: str) -> NoReturn:
+        message = re.sub(r"^argument command: invalid choice: (.+) \(choose from (.+)\)$", r"unknown command \1. Choose from \2", message)
         message = re.sub(r"^argument (\S+): ", r"\1 ", message)
         self.exit(2, f"Error: {message}. Run {self.prog} --help for usage.\n")
 

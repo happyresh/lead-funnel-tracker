@@ -132,6 +132,14 @@ def test_usage_error_format(capsys):  # review run 20261110-1900, cli-ux (DESIGN
     assert capsys.readouterr().err == "Error: --week must look like 2026-W46. Run lead-funnel report --help for usage.\n"
 
 
+def test_unknown_command(capsys):
+    with pytest.raises(SystemExit) as exc:
+        main(["nope"])
+    assert exc.value.code == 2
+    err = capsys.readouterr().err
+    assert err.startswith("Error: unknown command 'nope'. Choose from synth, check, report")
+
+
 @pytest.mark.parametrize("week", ["2026-W60", "lastweek"])
 def test_report_bad_week(tmp_path, capsys, week):  # QAD-F2-6
     with pytest.raises(SystemExit) as exc:

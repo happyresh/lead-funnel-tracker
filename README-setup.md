@@ -1,6 +1,7 @@
 # Setup Guide
 
 > How a new developer (or you, on a new computer) gets the project running.
+
 ## Overview
 
 Lead-Funnel Tracker is a command-line tool that turns an export of event leads into a weekly per-agency conversion report in Excel. It is for event and agency marketing teams.

@@ -9,6 +9,7 @@
 | Command | Purpose | Example |
 |---|---|---|
 | `lead-funnel report <file>` | Weekly per-agency funnel report | `lead-funnel report data/sample/leads-seed42.csv --week 2026-W46 --out reports/` |
+| `lead-funnel check <file>` | Load and validate a lead export; summarize rejected rows and duplicates | `lead-funnel check data/sample/leads-seed42.csv` |
 | `lead-funnel synth` | Synthetic lead file | `lead-funnel synth --rows 500 --seed 42 --out data/sample/leads-seed42.csv` |
 
 - Built with `argparse` (standard library).

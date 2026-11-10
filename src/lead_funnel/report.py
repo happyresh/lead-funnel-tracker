@@ -29,9 +29,14 @@ def write_report(
     wb = Workbook()
     _funnel_sheet(wb.active, report)
     _about_sheet(wb.create_sheet("About"), report, load, source_name, generated_at)
-    path = out_dir / f"funnel-{report.week}.xlsx"
+    path = report_path(out_dir, report.week)
     atomic_write(path, force, wb.save)
     return path
+
+
+def report_path(out_dir: Path, week: str) -> Path:
+    """Return where the report for `week` is written; the name never comes from input text."""
+    return out_dir / f"funnel-{week}.xlsx"
 
 
 def _funnel_sheet(ws, report: FunnelReport) -> None:
