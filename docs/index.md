@@ -92,6 +92,7 @@ Every feature follows: feature `F1` (PRD) -> gate criteria `G-F1-1` -> test rows
 |---|---|
 | 2026-11-10 | Documentation suite created from the agent workflow kit 1.2.1; adapted to CLI tool + Data / analysis, solo mode |
 | 2026-11-10 | F1 and F4 shipped (PR #2); personal references removed before making the repository public |
+| 2026-11-10 | Republished as a clean public repo; hosted CI removed and replaced by `.githooks/pre-push` (ruff + pytest) |
 
 ## 7. Health Check
 

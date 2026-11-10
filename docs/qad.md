@@ -44,7 +44,7 @@ Every gate criterion in the PRD gets three rows: **happy** (it works), **sad** (
 | QAD-F4-3 | G-F4-1 | abuse | `--rows 100000000` | Refused above a documented maximum | `tests/test_cli.py` | Performance Efficiency |
 | QAD-F4-4 | G-F4-2 | happy | Same seed twice | Byte-identical files | `tests/test_synth.py` | Reliability |
 | QAD-F4-5 | G-F4-2 | sad | Different seeds | Different files | `tests/test_synth.py` | Functional Suitability |
-| QAD-F4-6 | G-F4-2 | abuse | Run on Windows and Linux (CI) | Same bytes (fixed line endings and encoding) | `tests/test_synth.py` | Portability |
+| QAD-F4-6 | G-F4-2 | abuse | Committed sample compared byte for byte on the developer machine | Same bytes (fixed line endings and encoding) | `tests/test_synth.py` | Portability |
 | QAD-F4-7 | G-F4-3 | happy | Generated emails | All end in `example.com` / `example.org` | `tests/test_synth.py` | Security |
 | QAD-F4-8 | G-F4-3 | sad | Generated phones | Match a reserved fake pattern | `tests/test_synth.py` | Security |
 | QAD-F4-9 | G-F4-3 | abuse | Committed files under `data/` | A test scans them and fails on any non-example email domain | `tests/test_privacy.py` | Security |
