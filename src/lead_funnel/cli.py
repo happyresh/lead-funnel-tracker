@@ -35,6 +35,8 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def _synth(args: argparse.Namespace) -> int:
+    if blocker := _file_in_the_way(Path(args.out).parent):
+        return _error(f"--out {args.out} is inside {blocker}, which is a file, not a folder. Give another path.")
     try:
         write_csv(Path(args.out), generate_leads(args.rows, args.seed), force=args.force)
     except FileExistsError:
@@ -55,8 +57,9 @@ def _check(args: argparse.Namespace) -> int:
 
 def _report(args: argparse.Namespace) -> int:
     out, path = Path(args.out), Path(args.file)
-    if out.is_file():
-        return _error(f"--out {args.out} is a file, not a folder. Give a folder path.")
+    if blocker := _file_in_the_way(out):
+        name = args.out if blocker == out else f"{args.out} is inside {blocker}, which"
+        return _error(f"--out {name} is a file, not a folder. Give a folder path.")
     result = load_leads(path)
     week = args.week or default_week(_today())
     funnel = weekly_funnel(result.leads, week)
@@ -75,6 +78,11 @@ def _report(args: argparse.Namespace) -> int:
         week_line = f"No leads in {week}; wrote an empty report"
     _print_summary(path.name, result, week_line, f"Wrote {target}")
     return 0
+
+
+def _file_in_the_way(folder: Path) -> Path | None:
+    """Return the existing file, if any, that sits where `folder` or one of its parents must be."""
+    return next((p for p in (folder, *folder.parents) if p.is_file()), None)
 
 
 def _today() -> date:

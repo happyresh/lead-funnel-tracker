@@ -132,6 +132,18 @@ def test_usage_error_format(capsys):  # review run 20261110-1900, cli-ux (DESIGN
     assert capsys.readouterr().err == "Error: --week must look like 2026-W46. Run lead-funnel report --help for usage.\n"
 
 
+def test_out_inside_a_file(tmp_path, capsys):  # review run 20261110-1900, design-qa
+    notes = tmp_path / "notes.txt"
+    notes.write_text("x")
+    out = notes / "sub"
+    assert main(["report", str(WEEK46), "--week", "2026-W46", "--out", str(out), "--force"]) == 1
+    assert capsys.readouterr().err == f"Error: --out {out} is inside {notes}, which is a file, not a folder. Give a folder path.\n"
+    assert main(["synth", "--out", str(out / "x.csv"), "--force"]) == 1
+    err = capsys.readouterr().err
+    assert err == f"Error: --out {out / 'x.csv'} is inside {notes}, which is a file, not a folder. Give another path.\n"
+    assert [p.name for p in tmp_path.iterdir()] == ["notes.txt"]
+
+
 def test_unknown_command(capsys):
     with pytest.raises(SystemExit) as exc:
         main(["nope"])
