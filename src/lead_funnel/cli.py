@@ -37,6 +37,8 @@ def main(argv: list[str] | None = None) -> int:
 def _synth(args: argparse.Namespace) -> int:
     if blocker := _file_in_the_way(Path(args.out).parent):
         return _error(f"--out {args.out} is inside {blocker}, which is a file, not a folder. Give another path.")
+    if Path(args.out).is_dir():
+        return _error(f"--out {args.out} is a folder, not a file. Give a file path like {Path(args.out) / 'leads.csv'}.")
     try:
         write_csv(Path(args.out), generate_leads(args.rows, args.seed), force=args.force)
     except FileExistsError:

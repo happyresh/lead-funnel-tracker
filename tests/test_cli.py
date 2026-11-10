@@ -144,12 +144,21 @@ def test_out_inside_a_file(tmp_path, capsys):  # review run 20261110-1900, desig
     assert [p.name for p in tmp_path.iterdir()] == ["notes.txt"]
 
 
+def test_synth_out_is_a_folder(tmp_path, capsys):  # review run 20261110-1900, design-qa S5
+    for extra in ([], ["--force"]):
+        assert main(["synth", "--out", str(tmp_path), *extra]) == 1
+        expected = f"Error: --out {tmp_path} is a folder, not a file. Give a file path like {tmp_path / 'leads.csv'}.\n"
+        assert capsys.readouterr().err == expected
+    assert list(tmp_path.iterdir()) == []
+
+
 def test_unknown_command(capsys):
     with pytest.raises(SystemExit) as exc:
         main(["nope"])
     assert exc.value.code == 2
     err = capsys.readouterr().err
-    assert err.startswith("Error: unknown command 'nope'. Choose from synth, check, report")
+    # Newer Python patch releases quote the choices, so only the stable parts are checked.
+    assert err.startswith("Error: unknown command 'nope'. Choose from ") and "report" in err
 
 
 @pytest.mark.parametrize("week", ["2026-W60", "lastweek"])
