@@ -1,0 +1,15 @@
+lead_id,agency,captured_on,stage
+L01,Northwind Events,2026-11-09,Lead
+L02,Northwind Events,2026-11-10,Contacted
+L03,Northwind Events,2026-11-12,Intro session
+L04,Northwind Events,2026-11-15,Onboarded
+L05,Bluepeak Media,2026-11-09,Lead
+L06,Bluepeak Media,2026-11-11,Lead
+L07,Bluepeak Media,2026-11-11,Contacted
+L08,Bluepeak Media,2026-11-13,Contacted
+L09,Bluepeak Media,2026-11-14,Onboarded
+L10,Bluepeak Media,2026-11-14,Onboarded
+L11,Harborlight Agency,2026-11-10,Lead
+L12,Harborlight Agency,2026-11-12,Lead
+L13,Northwind Events,2026-11-08,Onboarded
+L14,Kestrel Promotions,2026-11-16,Contacted
