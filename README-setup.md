@@ -1,7 +1,6 @@
 # Setup Guide
 
-> How a new developer (or you, on a new computer) gets the project running. Commands are planned until the first feature creates `pyproject.toml`.
-
+> How a new developer (or you, on a new computer) gets the project running.
 ## Overview
 
 Lead-Funnel Tracker is a command-line tool that turns an export of event leads into a weekly per-agency conversion report in Excel. It is for event and agency marketing teams.
@@ -10,7 +9,7 @@ Lead-Funnel Tracker is a command-line tool that turns an export of event leads i
 
 | Part | Technology | Version source |
 |---|---|---|
-| Language | Python 3.12 | `pyproject.toml` (`requires-python`), once created |
+| Language | Python 3.12 | `pyproject.toml` (`requires-python`) |
 | Package manager | uv | installed tool |
 | Excel output | openpyxl | `pyproject.toml` / `uv.lock` |
 | Tests and lint | pytest, ruff | `pyproject.toml` dev dependencies |

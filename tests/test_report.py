@@ -87,6 +87,11 @@ def test_non_ascii_agency(tmp_path):  # Review Focus 4
     assert {ws["A4"].value, ws["A5"].value} == {"Café Events", "Ñandú Media"}
 
 
+def test_control_characters_dropped(tmp_path):  # review run 20261110-1900, security note
+    ws = openpyxl.load_workbook(_write(tmp_path, _leads("Acme\x01 Events")))["Funnel"]
+    assert ws["A4"].value == "Acme Events"
+
+
 def test_existing_report_needs_force(tmp_path):
     _write(tmp_path)
     with pytest.raises(FileExistsError):

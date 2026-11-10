@@ -5,6 +5,7 @@ from importlib.metadata import version
 from pathlib import Path
 
 from openpyxl import Workbook
+from openpyxl.cell.cell import ILLEGAL_CHARACTERS_RE
 from openpyxl.chart import BarChart, Reference
 from openpyxl.styles import Alignment, Font
 from openpyxl.utils import get_column_letter
@@ -97,7 +98,8 @@ def _about_sheet(ws, report: FunnelReport, load: LoadResult, source_name: str, g
 
 def _text(ws, row: int, col: int, value: str):
     """Write text that Excel must never run as a formula (input text can start with = + - @)."""
-    cell = ws.cell(row, col, value)
+    # Control characters from exports are dropped because the xlsx format cannot store them.
+    cell = ws.cell(row, col, ILLEGAL_CHARACTERS_RE.sub("", value))
     if value.startswith(_FORMULA_START):
         cell.data_type = "s"
     return cell

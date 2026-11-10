@@ -40,8 +40,11 @@ def parse_week(text: str) -> tuple[date, date]:
     match = _WEEK.fullmatch(text)
     if not match:
         raise ValueError(text)
-    monday = date.fromisocalendar(int(match[1]), int(match[2]), 1)
-    return monday, monday + timedelta(days=6)
+    try:
+        monday = date.fromisocalendar(int(match[1]), int(match[2]), 1)
+        return monday, monday + timedelta(days=6)
+    except OverflowError:  # 9999-W52 ends after date.max.
+        raise ValueError(text) from None
 
 
 def default_week(today: date) -> str:

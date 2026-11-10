@@ -17,7 +17,7 @@ def test_parse_week():
     assert parse_week("2026-W01") == (date(2025, 12, 29), date(2026, 1, 4))
 
 
-@pytest.mark.parametrize("text", ["2026-W60", "2026-W00", "2026-46", "lastweek", "2026-w46", " 2026-W46", "2026-W4"])
+@pytest.mark.parametrize("text", ["2026-W60", "2026-W00", "2026-46", "lastweek", "2026-w46", " 2026-W46", "2026-W4", "9999-W52"])
 def test_parse_week_rejects(text):
     with pytest.raises(ValueError):
         parse_week(text)
@@ -35,6 +35,7 @@ def test_default_week():
     assert default_week(date(2026, 11, 9)) == "2026-W45"  # Monday of W46
     assert default_week(date(2026, 11, 15)) == "2026-W45"  # Sunday of W46
     assert default_week(date(2026, 1, 12)) == "2026-W02"
+    assert default_week(date(2026, 1, 5)) == "2026-W01"  # ISO year 2026 starts in calendar 2025.
 
 
 def _rows(report):

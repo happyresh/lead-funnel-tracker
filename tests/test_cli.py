@@ -125,6 +125,13 @@ def test_report_default_week(tmp_path, capsys, monkeypatch):
     assert "Week 2026-W46 (last complete week): 12 leads across 3 agencies\n" in capsys.readouterr().out
 
 
+def test_usage_error_format(capsys):  # review run 20261110-1900, cli-ux (DESIGN.md section 3)
+    with pytest.raises(SystemExit) as exc:
+        main(["report", str(WEEK46), "--week", "9999-W52"])
+    assert exc.value.code == 2
+    assert capsys.readouterr().err == "Error: --week must look like 2026-W46. Run lead-funnel report --help for usage.\n"
+
+
 @pytest.mark.parametrize("week", ["2026-W60", "lastweek"])
 def test_report_bad_week(tmp_path, capsys, week):  # QAD-F2-6
     with pytest.raises(SystemExit) as exc:
@@ -169,7 +176,7 @@ def test_report_out_is_a_file(tmp_path, capsys):  # Review Focus 2
     out = tmp_path / "reports"
     out.write_text("not a folder")
     assert main(["report", str(WEEK46), "--week", "2026-W46", "--out", str(out)]) == 1
-    assert capsys.readouterr().err == f"Error: --out {out} is a file, not a folder.\n"
+    assert capsys.readouterr().err == f"Error: --out {out} is a file, not a folder. Give a folder path.\n"
 
 
 def test_report_all_rows_rejected(tmp_path, capsys):  # Review Focus 5

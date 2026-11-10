@@ -1,11 +1,13 @@
 """Command-line entry point: lead-funnel synth, check and report."""
 
 import argparse
+import re
 import sys
 import traceback
 from collections import Counter
 from datetime import date, datetime
 from pathlib import Path
+from typing import NoReturn
 
 from lead_funnel.load import LoadError, LoadResult, load_leads
 from lead_funnel.metrics import default_week, parse_week, weekly_funnel
@@ -54,7 +56,7 @@ def _check(args: argparse.Namespace) -> int:
 def _report(args: argparse.Namespace) -> int:
     out, path = Path(args.out), Path(args.file)
     if out.is_file():
-        return _error(f"--out {args.out} is a file, not a folder.")
+        return _error(f"--out {args.out} is a file, not a folder. Give a folder path.")
     result = load_leads(path)
     week = args.week or default_week(_today())
     funnel = weekly_funnel(result.leads, week)
@@ -124,9 +126,17 @@ def _week(text: str) -> str:
     return text
 
 
+class _Parser(argparse.ArgumentParser):
+    """Usage errors follow DESIGN.md section 3: Error: <problem>. <fix>."""
+
+    def error(self, message: str) -> NoReturn:
+        message = re.sub(r"^argument (\S+): ", r"\1 ", message)
+        self.exit(2, f"Error: {message}. Run {self.prog} --help for usage.\n")
+
+
 def _parser() -> argparse.ArgumentParser:
     debug_help = "show the full error trace when something goes wrong"
-    parser = argparse.ArgumentParser(
+    parser = _Parser(
         prog="lead-funnel", description="Check event lead exports, write weekly funnel reports in Excel, and generate fake leads for testing."
     )
     parser.add_argument("--debug", action="store_true", help=debug_help)
