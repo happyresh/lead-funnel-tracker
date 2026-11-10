@@ -1,0 +1,9 @@
+#!/bin/sh
+# Local replacement for CI: lint and tests must pass before any push leaves this machine.
+echo "pre-push: running ruff and pytest"
+if uv run ruff check . && uv run pytest -q; then
+    echo "pre-push: checks passed"
+else
+    echo "pre-push: checks failed, push stopped. Fix them, or push with --no-verify only if you accept the risk."
+    exit 1
+fi

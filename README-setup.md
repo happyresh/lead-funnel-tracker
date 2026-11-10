@@ -14,7 +14,7 @@ Lead-Funnel Tracker is a command-line tool that turns an export of event leads i
 | Package manager | uv | installed tool |
 | Excel output | openpyxl | `pyproject.toml` / `uv.lock` |
 | Tests and lint | pytest, ruff | `pyproject.toml` dev dependencies |
-| CI | GitHub Actions | `.github/workflows/ci.yml` |
+| Checks before push | git pre-push hook (ruff + pytest) | `.githooks/pre-push` |
 
 ## Prerequisites
 
@@ -29,8 +29,9 @@ Lead-Funnel Tracker is a command-line tool that turns an export of event leads i
 2. **Open in VS Code.**
 3. **Environment file:** none needed.
 4. **Install dependencies:** `uv sync`.
-5. **Generate sample data:** `uv run lead-funnel synth --rows 500 --seed 42 --out data/sample/leads-seed42.csv`.
-6. **Run a report:** `uv run lead-funnel report data/sample/leads-seed42.csv --week 2026-W46 --out reports/`.
+5. **Turn on the pre-push check (once per clone):** `git config core.hooksPath .githooks`. From then on every `git push` runs ruff and pytest first and stops if either fails. This replaces hosted CI.
+6. **Generate sample data:** `uv run lead-funnel synth --rows 500 --seed 42 --out .tmp/leads.csv`.
+7. **Check it:** `uv run lead-funnel check .tmp/leads.csv`. (The weekly `report` command arrives with F2 and F3.)
 7. **Open:** `reports/funnel-2026-W46.xlsx` in Excel.
 
 ## Everyday Commands
@@ -45,7 +46,8 @@ Lead-Funnel Tracker is a command-line tool that turns an export of event leads i
 ## Success Checklist
 
 - [ ] `uv run pytest` passes.
-- [ ] The report command writes an `.xlsx` that opens in Excel.
+- [ ] `git config core.hooksPath` prints `.githooks`.
+- [ ] `uv run lead-funnel check .tmp/leads.csv` prints a summary with 0 rejected rows.
 
 ## Troubleshooting
 
@@ -53,6 +55,7 @@ Lead-Funnel Tracker is a command-line tool that turns an export of event leads i
 |---|---|
 | `uv` not found | Install uv (link above) and open a new terminal |
 | Report file is locked | Close it in Excel; Windows blocks writing to an open file |
+| Push stopped with "pre-push: checks failed" | Run `uv run ruff check .` and `uv run pytest`, fix what fails, then push again |
 
 ## Useful Documents
 

@@ -16,8 +16,8 @@ Claude fills this section during setup by reading the repository. Agents use it 
 | Typecheck / lint command | `uv run ruff check .` (no type checker; add one only if a real bug calls for it) |
 | Build command | none (run with `uv run lead-funnel ...`) |
 | Run command | `uv run lead-funnel report <leads.csv or .xlsx> --week <YYYY-Www> --out reports/` (planned) |
-| Paths that need human approval to release | `pyproject.toml`, `uv.lock` (new dependencies), `data/sample/**` (privacy check), `.github/workflows/**` |
-| How to confirm a development deploy works | No deploy. CI is green on the PR, and the CLI run on `data/sample/` writes a report that opens in Excel with the expected per-agency totals |
+| Paths that need human approval to release | `pyproject.toml`, `uv.lock` (new dependencies), `data/sample/**` (privacy check), `.githooks/**` |
+| How to confirm a development deploy works | No deploy. The pre-push hook (ruff + pytest) passes, and the CLI run on `data/sample/` writes a report that opens in Excel with the expected per-agency totals |
 
 ## 2. Read Order
 
@@ -115,7 +115,7 @@ Run reviews with `claude --agent review-orchestrator`, following `docs/sad.md` s
 Solo mode uses the **short release**. Run with `/agent-workflow:ship` or `claude --agent release-integrator`. Any failure stops later steps.
 
 1. **S-R1 Review:** the task branch passes the review pipeline against `main` (`claude --agent review-orchestrator`), plus a Codex review if the Codex plugin is installed.
-2. **S-R2 Checks:** `uv run ruff check .` and `uv run pytest` pass locally and CI is green on the final head commit.
+2. **S-R2 Checks:** `uv run ruff check .` and `uv run pytest` pass on the final head commit; the pre-push hook (`.githooks/pre-push`) enforces this on every push. There is no hosted CI.
 3. **S-R3 Requirements QA:** `requirements-qa-gate` confirms each feature in the branch meets its PRD gates.
 4. **S-R4 Merge:** after the developer approves, merge the PR into `main` (no force-push, no history rewrite).
 5. **S-R5 Check:** on `main`, run the CLI on `data/sample/` and open the report.

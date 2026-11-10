@@ -13,10 +13,10 @@ Lead-Funnel Tracker is a command-line tool that turns an export of event leads i
 | Item | Status |
 |---|---|
 | Phase | Building: F1 and F4 merged to `main` (PR #1, PR #2); repository going public |
-| Last session | 2026-11-10: reviewer pipeline signed off 6/6; PR #1 and #2 merged without CI; personal details removed before going public |
-| In progress | `fix/public-cleanup` |
-| Next steps | 1. Confirm CI runs once public. 2. `/agent-workflow:feature` F2 metrics. 3. F3 Excel report |
-| Blockers | GitHub Actions blocked on the private repo by an account billing issue; going public is the workaround |
+| Last session | 2026-11-10: F1 and F4 shipped; repo republished as a clean public repo (old history archived privately); hosted CI replaced by a local pre-push hook |
+| In progress | `fix/local-checks` |
+| Next steps | 1. `/agent-workflow:feature` F2 metrics. 2. F3 Excel report. 3. `/evidence` |
+| Blockers | None. GitHub Actions stays unavailable while the account has a billing lock |
 | Questions for the developer | None |
 
 ## 3. Background and Problem
@@ -65,7 +65,7 @@ Agency project roles in event marketing are often asked to monitor leads per age
 | Languages and frameworks | Python 3.12 (machine has 3.12.3), uv 0.13.1, openpyxl; pytest and ruff as dev tools. Pinned in `pyproject.toml` and `uv.lock` |
 | Planned layout | `src/lead_funnel/` (code), `tests/`, `data/sample/` (synthetic only), `reports/` (output, Git-ignored) |
 | Database | None |
-| Hosting and deployment | None; runs locally. CI on GitHub Actions |
+| Hosting and deployment | None; runs locally. No hosted CI: `.githooks/pre-push` runs ruff and pytest before every push |
 | Sign-in / authentication | None |
 | Third-party services | None |
 | Repository and branches | `https://github.com/happyresh/lead-funnel-tracker` (public from 2026-11-10); `main` plus `feature/<slug>` and `fix/<slug>` |
@@ -82,7 +82,7 @@ Agency project roles in event marketing are often asked to monitor leads per age
 ## 10. Constraints
 
 - **Deadlines:** v1 working and recorded as evidence by 2026-11-16 (end of the practice run). No other hard date.
-- **Budget and accounts:** free only (public GitHub repo, so GitHub Actions is free).
+- **Budget and accounts:** free only. The GitHub account has a billing lock, so GitHub Actions cannot run on any repo; checks run locally.
 - **Required by school, client or employer:** none.
 - **Must use / must not use:** Python + openpyxl; no new library without a reason.
 - **Accessibility and devices:** reports open in Excel; text-only CLI output works without color.
@@ -100,7 +100,8 @@ Agency project roles in event marketing are often asked to monitor leads per age
 | 2026-11-10 | `lead-funnel check` command ships with F1 | F1 runnable and demoable before the report | Library only; skeleton `report` |
 | 2026-11-10 | Only `lead_id`, `agency`, `captured_on`, `stage` are read from input | The tool never holds personal data | Reading all columns |
 | 2026-11-10 | Messages never echo stage cell text; email- or phone-like lead ids print as "(id hidden)" | privacy-guardian review: shifted columns and CRM exports can carry names or contacts there | Echoing stage-like words only |
-| 2026-11-10 | Repository made public; personal email and job-application references removed first; future commits use the GitHub noreply email | GitHub Actions blocked on the private repo by an account billing issue; public repos get Actions free | Local pre-push hook; self-hosted runner |
+| 2026-11-10 | Republished as a new public repo with one clean commit; the old repo (full history) is archived privately as `lead-funnel-tracker-archive`; commits use the GitHub noreply email | Portfolio visibility without exposing old history | Making the old repo public (history held personal details) |
+| 2026-11-10 | No hosted CI; a git pre-push hook runs ruff and pytest before every push | The account billing lock blocks GitHub Actions on public and private repos | Self-hosted runner (also blocked); paying the balance (developer's choice, later) |
 
 ## 12. Risks and Open Questions
 
