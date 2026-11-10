@@ -74,6 +74,7 @@
 |---|---|---|---|---|
 | Spec | [superpowers/specs/2026-11-10-f4-f1-synth-load-design.md](superpowers/specs/2026-11-10-f4-f1-synth-load-design.md) | 2026-11-10 | F4 synthetic generator, F1 loader, `check` command | Executed |
 | Plan | [superpowers/plans/2026-11-10-f4-f1-synth-load.md](superpowers/plans/2026-11-10-f4-f1-synth-load.md) | 2026-11-10 | 7 tasks: scaffold, synth, safe write, CSV loader, duplicates, xlsx, CLI and docs | Executed |
+| Spec | [superpowers/specs/2026-11-10-f2-f3-report-design.md](superpowers/specs/2026-11-10-f2-f3-report-design.md) | 2026-11-10 | F2 weekly metrics + F3 Excel report, `report` command | Approved |
 
 ## 5. Traceability
 
