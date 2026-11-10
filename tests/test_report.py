@@ -92,6 +92,11 @@ def test_control_characters_dropped(tmp_path):  # review run 20261110-1900, secu
     assert ws["A4"].value == "Acme Events"
 
 
+def test_control_character_cannot_hide_formula(tmp_path):  # review run 20261110-1900, data-quality S5
+    ws = openpyxl.load_workbook(_write(tmp_path, _leads("\x01=1+1")))["Funnel"]
+    assert ws["A4"].value == "=1+1" and ws["A4"].data_type == "s"
+
+
 def test_existing_report_needs_force(tmp_path):
     _write(tmp_path)
     with pytest.raises(FileExistsError):

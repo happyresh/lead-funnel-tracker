@@ -9,6 +9,7 @@ from datetime import date, datetime
 from pathlib import Path
 
 import openpyxl
+from openpyxl.cell.cell import ILLEGAL_CHARACTERS_RE
 from openpyxl.utils.exceptions import InvalidFileException
 
 from lead_funnel.stages import parse_stage
@@ -95,7 +96,8 @@ def _build(name: str, rows: Iterable[list[object]]) -> LoadResult:
         rows_read += 1
         cell = {col: values[i] if i < len(values) else None for col, i in index.items()}
         lead_id = _text(cell["lead_id"]).strip()
-        agency = _text(cell["agency"]).strip()
+        # Control characters are dropped so the grouping key matches the label Excel can store.
+        agency = ILLEGAL_CHARACTERS_RE.sub("", _text(cell["agency"])).strip()
         stage = parse_stage(cell["stage"])
         captured_on = _date(cell["captured_on"])
         if not lead_id:

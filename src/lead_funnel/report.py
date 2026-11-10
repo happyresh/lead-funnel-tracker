@@ -104,7 +104,8 @@ def _about_sheet(ws, report: FunnelReport, load: LoadResult, source_name: str, g
 def _text(ws, row: int, col: int, value: str):
     """Write text that Excel must never run as a formula (input text can start with = + - @)."""
     # Control characters from exports are dropped because the xlsx format cannot store them.
-    cell = ws.cell(row, col, ILLEGAL_CHARACTERS_RE.sub("", value))
+    value = ILLEGAL_CHARACTERS_RE.sub("", value)
+    cell = ws.cell(row, col, value)
     if value.startswith(_FORMULA_START):
         cell.data_type = "s"
     return cell
