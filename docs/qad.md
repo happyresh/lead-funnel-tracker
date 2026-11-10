@@ -28,9 +28,9 @@ Every gate criterion in the PRD gets three rows: **happy** (it works), **sad** (
 | QAD-F2-5 | G-F2-2 | sad | Leads on Sunday 2026-11-15 and Monday 2026-11-16 | Sunday in W46, Monday in W47 | `tests/test_metrics.py` | Reliability |
 | QAD-F2-6 | G-F2-2 | abuse | `--week 2026-W60` or `--week lastweek` | Exit 2 with usage message | `tests/test_cli.py` | Usability |
 | QAD-F2-7 | G-F2-3 | happy | Agency with 0 Contacted leads | Contacted→Intro shows "n/a" | `tests/test_metrics.py` | Reliability |
-| QAD-F2-8 | G-F2-3 | sad | Week with no leads at all | Report says "no leads in 2026-W46"; exit 0 | `tests/test_cli.py` | Usability |
+| QAD-F2-8 | G-F2-3 | sad | Week with no leads at all | Report written with zeros; stdout `No leads in 2026-W46; wrote an empty report`; exit 0 | `tests/test_cli.py` | Usability |
 | QAD-F2-9 | G-F2-3 | abuse | Every agency empty after duplicate removal | No ZeroDivisionError; all rates "n/a" | `tests/test_metrics.py` | Reliability |
-| QAD-F3-1 | G-F3-1 | happy | Report for the sample week | Table and chart present; opens in openpyxl and Excel | `tests/test_report.py` | Functional Suitability |
+| QAD-F3-1 | G-F3-1 | happy | Report for the sample week | Table and chart present; opens in openpyxl (Excel checked by hand) | `tests/test_report.py` | Functional Suitability |
 | QAD-F3-2 | G-F3-1 | sad | Agency name of 200 characters | Written in full; column width capped | `tests/test_report.py` | Usability |
 | QAD-F3-3 | G-F3-1 | abuse | Run interrupted mid-write | No partial file under the final name | `tests/test_report.py` | Reliability |
 | QAD-F3-4 | G-F3-2 | happy | Agency named "Acme Events" | Written as text | `tests/test_report.py` | Functional Suitability |
@@ -38,7 +38,7 @@ Every gate criterion in the PRD gets three rows: **happy** (it works), **sad** (
 | QAD-F3-6 | G-F3-2 | abuse | Agency named `=HYPERLINK("http://x","click")` | Cell holds plain text; no formula in the file | `tests/test_report.py` | Security |
 | QAD-F3-7 | G-F3-3 | happy | `--out reports/` that does not exist | Folder created; report written there | `tests/test_cli.py` | Functional Suitability |
 | QAD-F3-8 | G-F3-3 | sad | Report already exists, no `--force` | Exit 1 "already exists, use --force" | `tests/test_cli.py` | Reliability |
-| QAD-F3-9 | G-F3-3 | abuse | `--out ../../Windows` or a symlink outside | Writes only inside the resolved `--out`; nothing elsewhere | `tests/test_cli.py` | Security |
+| QAD-F3-9 | G-F3-3 | abuse | `--out` that is an existing file; input text in the file name | File name built by the tool (`funnel-<week>.xlsx`), never from input; `--out` that is a file exits 1 | `tests/test_cli.py` | Security |
 | QAD-F4-1 | G-F4-1 | happy | `synth --rows 500 --seed 42` | CSV with 500 rows and all columns | `tests/test_synth.py` | Functional Suitability |
 | QAD-F4-2 | G-F4-1 | sad | `--rows 0` or `--rows -5` | Exit 2 with usage message | `tests/test_cli.py` | Usability |
 | QAD-F4-3 | G-F4-1 | abuse | `--rows 100000000` | Refused above a documented maximum | `tests/test_cli.py` | Performance Efficiency |

@@ -1,12 +1,17 @@
-"""Command-line entry point: lead-funnel synth and lead-funnel check."""
+"""Command-line entry point: lead-funnel synth, check and report."""
 
 import argparse
+import re
 import sys
 import traceback
 from collections import Counter
+from datetime import date, datetime
 from pathlib import Path
+from typing import NoReturn
 
 from lead_funnel.load import LoadError, LoadResult, load_leads
+from lead_funnel.metrics import default_week, parse_week, weekly_funnel
+from lead_funnel.report import report_path, write_report
 from lead_funnel.synth import generate_leads, write_csv
 
 MAX_ROWS = 100_000
@@ -30,6 +35,10 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def _synth(args: argparse.Namespace) -> int:
+    if blocker := _file_in_the_way(Path(args.out).parent):
+        return _error(f"--out {args.out} is inside {blocker}, which is a file, not a folder. Give another path.")
+    if Path(args.out).is_dir():
+        return _error(f"--out {args.out} is a folder, not a file. Give a file path like {Path(args.out) / 'leads.csv'}.")
     try:
         write_csv(Path(args.out), generate_leads(args.rows, args.seed), force=args.force)
     except FileExistsError:
@@ -42,20 +51,56 @@ def _synth(args: argparse.Namespace) -> int:
 
 def _check(args: argparse.Namespace) -> int:
     path = Path(args.file)
-    _print_summary(path.name, load_leads(path))
+    result = load_leads(path)
+    agencies = len({lead.agency for lead in result.leads})
+    _print_summary(path.name, result, f"Kept {len(result.leads):,} leads across {agencies:,} agencies")
     return 0
 
 
-def _print_summary(name: str, result: LoadResult) -> None:
+def _report(args: argparse.Namespace) -> int:
+    out, path = Path(args.out), Path(args.file)
+    if blocker := _file_in_the_way(out):
+        name = args.out if blocker == out else f"{args.out} is inside {blocker}, which"
+        return _error(f"--out {name} is a file, not a folder. Give a folder path.")
+    result = load_leads(path)
+    week = args.week or default_week(_today())
+    funnel = weekly_funnel(result.leads, week)
+    target = report_path(out, week)
+    try:
+        write_report(funnel, result, path.name, out, args.force, datetime.now())
+    except FileExistsError:
+        return _error(f"{target} already exists. Use --force to replace it.")
+    except PermissionError:
+        return _error(f"cannot write {target}. Close it in Excel and try again.")
+    if funnel.leads_in_week:
+        note = "" if args.week else " (last complete week)"
+        active = sum(1 for a in funnel.agencies if a.reached[0])
+        week_line = f"Week {week}{note}: {funnel.leads_in_week:,} leads across {active:,} agencies"
+    else:
+        week_line = f"No leads in {week}; wrote an empty report"
+    _print_summary(path.name, result, week_line, f"Wrote {target}")
+    return 0
+
+
+def _file_in_the_way(folder: Path) -> Path | None:
+    """Return the existing file, if any, that sits where `folder` or one of its parents must be."""
+    return next((p for p in (folder, *folder.parents) if p.is_file()), None)
+
+
+def _today() -> date:
+    return date.today()
+
+
+def _print_summary(name: str, result: LoadResult, *lines: str) -> None:
     counts = Counter(next(r for r in REASONS if reason.startswith(r)) for _, _, reason in result.rejected)
     rejected = f"Rejected {len(result.rejected):,} rows"
     if counts:
         rejected += " (" + ", ".join(f"{r}: {counts[r]:,}" for r in REASONS if counts[r]) + ")"
-    agencies = len({lead.agency for lead in result.leads})
     print(f"Read {result.rows_read:,} rows from {name}")
     print(rejected)
     print(f"Removed {result.duplicates:,} duplicate lead ids")
-    print(f"Kept {len(result.leads):,} leads across {agencies:,} agencies")
+    for line in lines:
+        print(line)
 
     details = [
         f"Row {row} ({lead_id}): {reason}" if lead_id else f"Row {row}: {reason}"
@@ -83,10 +128,27 @@ def _rows(text: str) -> int:
     return rows
 
 
+def _week(text: str) -> str:
+    try:
+        parse_week(text)
+    except ValueError:
+        raise argparse.ArgumentTypeError("must look like 2026-W46") from None
+    return text
+
+
+class _Parser(argparse.ArgumentParser):
+    """Usage errors follow DESIGN.md section 3: Error: <problem>. <fix>."""
+
+    def error(self, message: str) -> NoReturn:
+        message = re.sub(r"^argument command: invalid choice: (.+) \(choose from (.+)\)$", r"unknown command \1. Choose from \2", message)
+        message = re.sub(r"^argument (\S+): ", r"\1 ", message)
+        self.exit(2, f"Error: {message}. Run {self.prog} --help for usage.\n")
+
+
 def _parser() -> argparse.ArgumentParser:
     debug_help = "show the full error trace when something goes wrong"
-    parser = argparse.ArgumentParser(
-        prog="lead-funnel", description="Check event lead exports and generate fake leads for testing."
+    parser = _Parser(
+        prog="lead-funnel", description="Check event lead exports, write weekly funnel reports in Excel, and generate fake leads for testing."
     )
     parser.add_argument("--debug", action="store_true", help=debug_help)
     # SUPPRESS keeps a subcommand's missing --debug from resetting one given before the subcommand.
@@ -118,4 +180,18 @@ def _parser() -> argparse.ArgumentParser:
     )
     check.add_argument("file", help="lead export (.csv or .xlsx)")
     check.set_defaults(run=_check)
+
+    report = commands.add_parser(
+        "report",
+        parents=[common],
+        help="write the weekly per-agency funnel report in Excel",
+        description="Load a lead export and write funnel-<week>.xlsx with per-agency counts, rates and a chart.",
+        epilog="Example:\n  lead-funnel report data/sample/leads-seed42.csv --week 2026-W46 --out reports/",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    report.add_argument("file", help="lead export (.csv or .xlsx)")
+    report.add_argument("--week", type=_week, help="ISO week like 2026-W46 (default: last complete week)")
+    report.add_argument("--out", default="reports", help="folder for the report (default: reports)")
+    report.add_argument("--force", action="store_true", help="replace the report if it already exists")
+    report.set_defaults(run=_report)
     return parser

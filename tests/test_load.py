@@ -256,3 +256,10 @@ def test_csv_error_message_has_fix(tmp_path):
     with pytest.raises(LoadError) as err:
         load_leads(path)
     assert str(err.value).endswith(". Re-export it from the source and try again.")
+
+
+def test_agency_control_characters(tmp_path):  # review run 20261110-1900, data-quality S5
+    text = HEADER + row("L1", "Acme") + row("L2", "Acme\x01") + row("L3", "\x01")
+    result = load_leads(write(tmp_path, text))
+    assert [lead.agency for lead in result.leads] == ["Acme", "Acme"]
+    assert result.rejected == [(4, "L3", "blank agency")]

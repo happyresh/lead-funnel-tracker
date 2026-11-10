@@ -1,6 +1,6 @@
 # Product Requirements Document (PRD)
 
-**Status:** Draft (F1 and F4 gates confirmed 2026-11-10; F2 and F3 to confirm in their brainstorm)
+**Status:** Draft (F1 and F4 gates confirmed 2026-11-10; F2 and F3 gates confirmed 2026-11-10)
 
 ## 1. Problem
 
@@ -44,6 +44,8 @@ Each feature has an ID (F1, F2...). Each gate criterion has an ID (G-F1-1...) an
 
 **Use cases:**
 - UC-F2-1: The report owner gets week 46 numbers for every agency.
+
+**Command:** `lead-funnel report <file> --week YYYY-Www --out DIR`. Every agency in the file appears; agencies with no leads that week show zeros and "n/a", sorted last.
 
 **Out of scope:** week-over-week trends (Later).
 
