@@ -1,0 +1,9 @@
+lead_id,name,email,phone,company,agency,event,captured_on,stage
+L1,Ana Cruz,ana@example.com,+00 900 000 0001,Bluebird Bakery,Northwind Events,Manila Roadshow,2026-11-09,Lead
+L3,Ben Reyes,ben@example.com,+00 900 000 0002,Corner Café,Northwind Events,Manila Roadshow,2026-11-10,Contacted
+L4,Cara Lim,cara@example.com,+00 900 000 0003,Bluebird Bakery,Bluepeak Media,Cebu Roadshow,2026-11-11,Won
+L5,Dan Uy,dan@example.com,+00 900 000 0004,Corner Café,Bluepeak Media,Cebu Roadshow,2026-11-12,Intro session
+L6,Eva Tan,eva@example.com,+00 900 000 0005,Bluebird Bakery,Bluepeak Media,Cebu Roadshow,11/13/2026,Lead
+L3,Ben Reyes,ben@example.com,+00 900 000 0002,Corner Café,Northwind Events,Manila Roadshow,2026-11-10,Onboarded
+,Fay Go,fay@example.com,+00 900 000 0006,Corner Café,Bluepeak Media,Cebu Roadshow,2026-11-14,Lead
+L9,Gil Sy,gil@example.com,+00 900 000 0007,Bluebird Bakery,Bluepeak Media,Cebu Roadshow,2026-11-15,  onboarded
