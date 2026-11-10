@@ -74,8 +74,8 @@
 |---|---|---|---|---|
 | Spec | [superpowers/specs/2026-11-10-f4-f1-synth-load-design.md](superpowers/specs/2026-11-10-f4-f1-synth-load-design.md) | 2026-11-10 | F4 synthetic generator, F1 loader, `check` command | Executed |
 | Plan | [superpowers/plans/2026-11-10-f4-f1-synth-load.md](superpowers/plans/2026-11-10-f4-f1-synth-load.md) | 2026-11-10 | 7 tasks: scaffold, synth, safe write, CSV loader, duplicates, xlsx, CLI and docs | Executed |
-| Spec | [superpowers/specs/2026-11-10-f2-f3-report-design.md](superpowers/specs/2026-11-10-f2-f3-report-design.md) | 2026-11-10 | F2 weekly metrics + F3 Excel report, `report` command | Approved |
-| Plan | [superpowers/plans/2026-11-10-f2-f3-report.md](superpowers/plans/2026-11-10-f2-f3-report.md) | 2026-11-10 | 6 tasks: atomic write, week parsing, funnel counts, workbook, chart and injection guard, CLI and docs | Draft |
+| Spec | [superpowers/specs/2026-11-10-f2-f3-report-design.md](superpowers/specs/2026-11-10-f2-f3-report-design.md) | 2026-11-10 | F2 weekly metrics + F3 Excel report, `report` command | Executed |
+| Plan | [superpowers/plans/2026-11-10-f2-f3-report.md](superpowers/plans/2026-11-10-f2-f3-report.md) | 2026-11-10 | 6 tasks: atomic write, week parsing, funnel counts, workbook, chart and injection guard, CLI and docs | Executed |
 
 ## 5. Traceability
 
@@ -84,8 +84,8 @@ Every feature follows: feature `F1` (PRD) -> gate criteria `G-F1-1` -> test rows
 | Feature | Gates | Test rows | Change records | Status |
 |---|---|---|---|---|
 | F1 Load and validate leads | G-F1-1 to G-F1-3 | QAD-F1-1 to QAD-F1-9 | none | Shipped (PR #2) |
-| F2 Weekly per-agency funnel metrics | G-F2-1 to G-F2-3 | QAD-F2-1 to QAD-F2-9 | none | Planned |
-| F3 Excel report | G-F3-1 to G-F3-3 | QAD-F3-1 to QAD-F3-9 | none | Planned |
+| F2 Weekly per-agency funnel metrics | G-F2-1 to G-F2-3 | QAD-F2-1 to QAD-F2-9 | none | Built, in review |
+| F3 Excel report | G-F3-1 to G-F3-3 | QAD-F3-1 to QAD-F3-9 | none | Built, in review |
 | F4 Synthetic lead generator | G-F4-1 to G-F4-3 | QAD-F4-1 to QAD-F4-9 | none | Shipped (PR #2) |
 
 ## 6. Change Log

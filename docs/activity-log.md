@@ -11,3 +11,7 @@ Newest entry at the bottom. Two to four lines per session: what changed and why,
 - Built `lead-funnel synth` and `lead-funnel check` test-first from the approved spec and plan; final review fixes (message format, date hint, no contact-like echo).
 - Verified: 61 tests pass, ruff clean; fresh whole-branch review done. Open: reviewer pipeline, 6 deferred minors (see PR), F2 metrics next.
 - 2026-11-10 review: reviewer pipeline signed off (6/6 PASS on 24144c7c) after fixing privacy, --debug and help-wording findings; pushed to PR #2.
+
+## 2026-11-10 F2 metrics + F3 Excel report (feature/f2-f3-report)
+- Built `lead-funnel report` test-first from the approved spec and plan: `files.atomic_write` (shared with synth), `metrics.py` (ISO week, reached counts, rates with n/a), `report.py` (Funnel and About sheets, bar chart, formula-injection guard).
+- Verified: 117 tests pass, ruff clean; real run on the 500-lead sample writes `funnel-2026-W46.xlsx` (94 leads, 6 agencies; totals equal agency sums). Open: Excel open check by hand, reviewer pipeline, PR.

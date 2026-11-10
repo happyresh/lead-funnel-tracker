@@ -1,3 +1,4 @@
+from datetime import date
 from pathlib import Path
 
 import pytest
@@ -102,7 +103,93 @@ def test_debug_flag_after_subcommand(capsys, monkeypatch):  # review run 2026111
     assert "Traceback" in capsys.readouterr().err
 
 
-@pytest.mark.parametrize("command", ["synth", "check"])
+WEEK46 = ROOT / "tests" / "fixtures" / "week46.csv"
+
+
+def test_report_week46(tmp_path, capsys):  # QAD-F2-1 via the CLI
+    assert main(["report", str(WEEK46), "--week", "2026-W46", "--out", str(tmp_path)]) == 0
+    path = tmp_path / "funnel-2026-W46.xlsx"
+    assert capsys.readouterr().out == (
+        "Read 14 rows from week46.csv\n"
+        "Rejected 0 rows\n"
+        "Removed 0 duplicate lead ids\n"
+        "Week 2026-W46: 12 leads across 3 agencies\n"
+        f"Wrote {path}\n"
+    )
+    assert path.exists()
+
+
+def test_report_default_week(tmp_path, capsys, monkeypatch):
+    monkeypatch.setattr(cli, "_today", lambda: date(2026, 11, 17))
+    assert main(["report", str(WEEK46), "--out", str(tmp_path)]) == 0
+    assert "Week 2026-W46 (last complete week): 12 leads across 3 agencies\n" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("week", ["2026-W60", "lastweek"])
+def test_report_bad_week(tmp_path, capsys, week):  # QAD-F2-6
+    with pytest.raises(SystemExit) as exc:
+        main(["report", str(WEEK46), "--week", week, "--out", str(tmp_path)])
+    assert exc.value.code == 2
+    assert "must look like 2026-W46" in capsys.readouterr().err
+
+
+def test_report_empty_week(tmp_path, capsys):  # QAD-F2-8
+    assert main(["report", str(WEEK46), "--week", "2026-W40", "--out", str(tmp_path)]) == 0
+    out = capsys.readouterr().out.splitlines()
+    assert out[3:] == ["No leads in 2026-W40; wrote an empty report", f"Wrote {tmp_path / 'funnel-2026-W40.xlsx'}"]
+
+
+def test_report_creates_out(tmp_path):  # QAD-F3-7
+    out = tmp_path / "new" / "reports"
+    assert main(["report", str(WEEK46), "--week", "2026-W46", "--out", str(out)]) == 0
+    assert [p.name for p in out.iterdir()] == ["funnel-2026-W46.xlsx"]
+
+
+def test_report_existing_needs_force(tmp_path, capsys):  # QAD-F3-8
+    args = ["report", str(WEEK46), "--week", "2026-W46", "--out", str(tmp_path)]
+    main(args)
+    capsys.readouterr()
+    assert main(args) == 1
+    path = tmp_path / "funnel-2026-W46.xlsx"
+    assert capsys.readouterr().err == f"Error: {path} already exists. Use --force to replace it.\n"
+    assert main([*args, "--force"]) == 0
+
+
+def test_report_permission_error(tmp_path, capsys, monkeypatch):  # Review Focus 3
+    def locked(*args, **kwargs):
+        raise PermissionError("locked")
+
+    monkeypatch.setattr(cli, "write_report", locked)
+    assert main(["report", str(WEEK46), "--week", "2026-W46", "--out", str(tmp_path)]) == 1
+    path = tmp_path / "funnel-2026-W46.xlsx"
+    assert capsys.readouterr().err == f"Error: cannot write {path}. Close it in Excel and try again.\n"
+
+
+def test_report_out_is_a_file(tmp_path, capsys):  # Review Focus 2
+    out = tmp_path / "reports"
+    out.write_text("not a folder")
+    assert main(["report", str(WEEK46), "--week", "2026-W46", "--out", str(out)]) == 1
+    assert capsys.readouterr().err == f"Error: --out {out} is a file, not a folder.\n"
+
+
+def test_report_all_rows_rejected(tmp_path, capsys):  # Review Focus 5
+    p = tmp_path / "leads.csv"
+    p.write_text("lead_id,agency,captured_on,stage\nL1,Acme,2026-11-10,Won\n", encoding="utf-8")
+    assert main(["report", str(p), "--week", "2026-W46", "--out", str(tmp_path / "r")]) == 0
+    assert "No leads in 2026-W46; wrote an empty report" in capsys.readouterr().out
+    assert (tmp_path / "r" / "funnel-2026-W46.xlsx").exists()
+
+
+def test_report_debug_after_subcommand(tmp_path, capsys, monkeypatch):
+    def boom(*args, **kwargs):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(cli, "write_report", boom)
+    assert main(["report", str(WEEK46), "--week", "2026-W46", "--out", str(tmp_path), "--debug"]) == 3
+    assert "Traceback" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("command", ["synth", "check", "report"])
 def test_help_shows_examples(capsys, command):
     with pytest.raises(SystemExit) as exc:
         main([command, "--help"])
@@ -112,7 +199,7 @@ def test_help_shows_examples(capsys, command):
 
 
 def test_help_avoids_banned_words(capsys):  # review run 20261110-2200, design-qa (docs/voice.md)
-    for args in (["--help"], ["synth", "--help"], ["check", "--help"]):
+    for args in (["--help"], ["synth", "--help"], ["check", "--help"], ["report", "--help"]):
         with pytest.raises(SystemExit):
             main(args)
         out = capsys.readouterr().out.lower()

@@ -6,16 +6,16 @@
 
 ## 1. Project Summary
 
-Lead-Funnel Tracker is a command-line tool that turns an export of event leads into a weekly per-agency conversion report in Excel (source: `README.md`). It is for event and agency marketing teams (source: `README.md`), and is a portfolio piece that proves data, Excel and project-management skills for agency project roles (source: the developer's private project notes, outside the repo). Stage: in development (F1 and F4 shipped). Profiles: **CLI tool + Data / analysis** (confirmed 2026-11-10). Working mode: **solo** (confirmed 2026-11-10).
+Lead-Funnel Tracker is a command-line tool that turns an export of event leads into a weekly per-agency conversion report in Excel (source: `README.md`). It is for event and agency marketing teams (source: `README.md`), and is a portfolio piece that proves data, Excel and project-management skills for agency project roles (source: the developer's private project notes, outside the repo). Stage: in development (F1 and F4 shipped; F2 and F3 built, in review). Profiles: **CLI tool + Data / analysis** (confirmed 2026-11-10). Working mode: **solo** (confirmed 2026-11-10).
 
 ## 2. Current State
 
 | Item | Status |
 |---|---|
-| Phase | Building: F1 and F4 merged to `main` (PR #1, PR #2); repository going public |
-| Last session | 2026-11-10: F1 and F4 shipped; repo republished as a clean public repo (old history archived privately); hosted CI replaced by a local pre-push hook |
-| In progress | `fix/local-checks` |
-| Next steps | 1. `/agent-workflow:feature` F2 metrics. 2. F3 Excel report. 3. `/evidence` |
+| Phase | Building: F1 and F4 on `main`; F2 and F3 built on `feature/f2-f3-report`, in review |
+| Last session | 2026-11-10: built `lead-funnel report` (F2 metrics + F3 Excel workbook) from the approved spec and plan; 117 tests pass, ruff clean |
+| In progress | `feature/f2-f3-report`: open the sample report in Excel once, then the reviewer pipeline and PR |
+| Next steps | 1. Open `.tmp/reports/funnel-2026-W46.xlsx` in Excel (no repair warning, chart visible). 2. Reviewer pipeline (`claude --agent review-orchestrator`). 3. PR and merge. 4. `/evidence` |
 | Blockers | None. GitHub Actions stays unavailable while the account has a billing lock |
 | Questions for the developer | None |
 
@@ -102,6 +102,11 @@ Agency project roles in event marketing are often asked to monitor leads per age
 | 2026-11-10 | Messages never echo stage cell text; email- or phone-like lead ids print as "(id hidden)" | privacy-guardian review: shifted columns and CRM exports can carry names or contacts there | Echoing stage-like words only |
 | 2026-11-10 | Republished as a new public repo with one clean commit; the old repo (full history) is archived privately as `lead-funnel-tracker-archive`; commits use the GitHub noreply email | Portfolio visibility without exposing old history | Making the old repo public (history held personal details) |
 | 2026-11-10 | No hosted CI; a git pre-push hook runs ruff and pytest before every push | The account billing lock blocks GitHub Actions on public and private repos | Self-hosted runner (also blocked); paying the balance (developer's choice, later) |
+| 2026-11-10 | F2 and F3 ship together as one `lead-funnel report` command | One command does the whole job | Separate metrics command |
+| 2026-11-10 | Every agency in the file gets a row; agencies with no leads that week show zeros and "n/a", sorted last | Quiet agencies are visible, not missing | Only agencies active that week |
+| 2026-11-10 | Python computes every value; the workbook holds plain values and number formats, no formulas | No formula injection surface; numbers tested in Python | Live Excel formulas |
+| 2026-11-10 | Snapshot model: a lead counts at its current stage in the ISO week of `captured_on` | The export holds only current stage, not stage dates | Per-stage event dates |
+| 2026-11-10 | The safe-write helper moved to `files.py`; `synth` and `report` share it | Second user arrived (F4 spec decision 8) | Two copies |
 
 ## 12. Risks and Open Questions
 

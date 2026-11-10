@@ -31,8 +31,8 @@ Lead-Funnel Tracker is a command-line tool that turns an export of event leads i
 4. **Install dependencies:** `uv sync`.
 5. **Turn on the pre-push check (once per clone):** `git config core.hooksPath .githooks`. From then on every `git push` runs ruff and pytest first and stops if either fails. This replaces hosted CI.
 6. **Generate sample data:** `uv run lead-funnel synth --rows 500 --seed 42 --out .tmp/leads.csv`.
-7. **Check it:** `uv run lead-funnel check .tmp/leads.csv`. (The weekly `report` command arrives with F2 and F3.)
-7. **Open:** `reports/funnel-2026-W46.xlsx` in Excel.
+7. **Check it:** `uv run lead-funnel check .tmp/leads.csv`.
+8. **Report:** `uv run lead-funnel report .tmp/leads.csv --week 2026-W46 --out .tmp/reports`, then open `.tmp/reports/funnel-2026-W46.xlsx` in Excel.
 
 ## Everyday Commands
 
@@ -48,6 +48,7 @@ Lead-Funnel Tracker is a command-line tool that turns an export of event leads i
 - [ ] `uv run pytest` passes.
 - [ ] `git config core.hooksPath` prints `.githooks`.
 - [ ] `uv run lead-funnel check .tmp/leads.csv` prints a summary with 0 rejected rows.
+- [ ] `uv run lead-funnel report .tmp/leads.csv --week 2026-W46 --out .tmp/reports` writes `funnel-2026-W46.xlsx` and it opens in Excel without a repair warning.
 
 ## Troubleshooting
 
