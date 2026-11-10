@@ -1,12 +1,11 @@
 """Seeded generator of obviously fake lead data."""
 
 import csv
-import os
 import random
-import tempfile
 from datetime import date, timedelta
 from pathlib import Path
 
+from lead_funnel.files import atomic_write
 from lead_funnel.stages import STAGES
 
 COLUMNS = ("lead_id", "name", "email", "phone", "company", "agency", "event", "captured_on", "stage")
@@ -65,21 +64,11 @@ def generate_leads(rows: int, seed: int) -> list[dict[str, str]]:
 
 def write_csv(path: Path, leads: list[dict[str, str]], force: bool = False) -> None:
     """Write leads as UTF-8 CSV with LF endings via a temp file, refusing to overwrite unless forced."""
-    if path.exists() and not force:
-        raise FileExistsError(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tmp_path = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            "w", encoding="utf-8", newline="", dir=path.parent, suffix=".tmp", delete=False
-        ) as tmp:
-            tmp_path = Path(tmp.name)
-            writer = csv.DictWriter(tmp, fieldnames=COLUMNS, lineterminator="\n")
-            writer.writeheader()
-            writer.writerows(leads)
-        os.replace(tmp_path, path)
-    except BaseException:
-        # Remove the temp file after it is closed so Windows allows the delete.
-        if tmp_path:
-            tmp_path.unlink(missing_ok=True)
-        raise
+    atomic_write(path, force, lambda tmp: _write_rows(tmp, leads))
+
+
+def _write_rows(path: Path, leads: list[dict[str, str]]) -> None:
+    with path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=COLUMNS, lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(leads)
