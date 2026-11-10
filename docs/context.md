@@ -13,9 +13,9 @@ Lead-Funnel Tracker is a command-line tool that turns an export of event leads i
 | Item | Status |
 |---|---|
 | Phase | Building: F1 and F4 on `main`; F2 and F3 built on `feature/f2-f3-report`, in review |
-| Last session | 2026-11-10: built `lead-funnel report` (F2 metrics + F3 Excel workbook) from the approved spec and plan; 117 tests pass, ruff clean |
-| In progress | `feature/f2-f3-report`: open the sample report in Excel once, then the reviewer pipeline and PR |
-| Next steps | 1. Open `.tmp/reports/funnel-2026-W46.xlsx` in Excel (no repair warning, chart visible). 2. Reviewer pipeline (`claude --agent review-orchestrator`). 3. PR and merge. 4. `/evidence` |
+| Last session | 2026-11-10: built `lead-funnel report` (F2 metrics + F3 Excel workbook); six-reviewer pipeline run and fixes applied; 125 tests pass, ruff clean |
+| In progress | `feature/f2-f3-report` PR to `main`: open the sample report in Excel once, then merge |
+| Next steps | 1. Open `.tmp/reports/funnel-2026-W46.xlsx` in Excel (no repair warning, chart visible). 2. Merge the PR. 3. `/evidence` |
 | Blockers | None. GitHub Actions stays unavailable while the account has a billing lock |
 | Questions for the developer | None |
 

@@ -15,3 +15,4 @@ Newest entry at the bottom. Two to four lines per session: what changed and why,
 ## 2026-11-10 F2 metrics + F3 Excel report (feature/f2-f3-report)
 - Built `lead-funnel report` test-first from the approved spec and plan: `files.atomic_write` (shared with synth), `metrics.py` (ISO week, reached counts, rates with n/a), `report.py` (Funnel and About sheets, bar chart, formula-injection guard).
 - Verified: 117 tests pass, ruff clean; real run on the 500-lead sample writes `funnel-2026-W46.xlsx` (94 leads, 6 agencies; totals equal agency sums). Open: Excel open check by hand, reviewer pipeline, PR.
+- 2026-11-10 review (run 20261110-1900, six reviewers run from the main session): fixed 9999-W52 crash, usage errors in DESIGN.md format, a formula-guard bypass introduced by the first control-character fix, `--out` inside a file or a folder for synth, one `report_path` helper; 125 tests pass.
