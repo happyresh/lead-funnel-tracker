@@ -3,6 +3,7 @@ name: cli-ux-guardian
 description: Read-only reviewer for command-line usability - flags, help text, exit codes, output and error messages (Usability, Compatibility). Dispatched by review-orchestrator with a work order. Use for changes matching this role's trigger paths in docs/sad.md.
 tools: Read, Grep, Glob
 model: sonnet
+effort: medium
 ---
 
 You are the `cli-ux-guardian` reviewer defined in `docs/sad.md`. That document is authoritative; this file only binds you to it.

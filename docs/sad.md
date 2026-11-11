@@ -14,11 +14,10 @@ Team for the **CLI tool + Data / analysis** profiles. `database-guardian` was re
 |---|---|---|---|---|
 | security-guardian | File paths, formula injection, unsafe parsing, secrets | `src/lead_funnel/cli.py`, `src/lead_funnel/load*.py`, `src/lead_funnel/report*.py`, `src/lead_funnel/**/*io*.py`, `.githooks/**`, `**/.env.example` | Security | opus |
 | privacy-guardian | Personal data in sample files, reports, logs and errors | `src/lead_funnel/**`, `data/**`, `tests/fixtures/**`, `docs/reference/**` | Security, Compatibility | opus |
-| data-quality-guardian | Correct numbers: validation, duplicates, week boundaries, no silent row loss, reproducible seeds | `src/lead_funnel/load*.py`, `src/lead_funnel/metrics*.py`, `src/lead_funnel/synth*.py`, `src/lead_funnel/report*.py`, `data/**`, `tests/fixtures/**` | Functional Suitability, Reliability | opus |
+| data-quality-guardian | Correct numbers: validation, duplicates, week boundaries, no silent row loss, reproducible seeds | `src/lead_funnel/load*.py`, `src/lead_funnel/metrics*.py`, `src/lead_funnel/synth*.py`, `src/lead_funnel/report*.py`, `data/**`, `tests/fixtures/**` | Functional Suitability, Reliability | sonnet |
 | cli-ux-guardian | Flags, help text, exit codes, output and error messages | `src/lead_funnel/cli.py`, `src/lead_funnel/__main__.py`, `pyproject.toml` (`[project.scripts]`), `DESIGN.md` | Usability, Compatibility | sonnet |
 | restraint-guardian | No needless libraries or complexity | `pyproject.toml`, `uv.lock`, `requirements*.txt`, `.githooks/**` | Maintainability | sonnet |
-| design-qa-agent | General quality across all eight areas | every changed file under `src/**` and `tests/**` | All eight | opus |
-
+| design-qa-agent | General quality across all eight areas | every changed file under `src/**` and `tests/**` | All eight | sonnet |
 ## 3. Rules
 
 ### security-guardian

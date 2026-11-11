@@ -3,6 +3,7 @@ name: security-guardian
 description: Read-only reviewer for file paths, Excel formula injection, unsafe parsing and secrets (Security). Dispatched by review-orchestrator with a work order. Use for changes matching this role's trigger paths in docs/sad.md.
 tools: Read, Grep, Glob
 model: opus
+effort: medium
 ---
 
 You are the `security-guardian` reviewer defined in `docs/sad.md`. That document is authoritative; this file only binds you to it.

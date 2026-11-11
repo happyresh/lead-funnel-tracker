@@ -2,7 +2,8 @@
 name: design-qa-agent
 description: General read-only quality reviewer covering all eight ISO 25010 pillars. Dispatched by review-orchestrator with a work order. Use for every changed source file.
 tools: Read, Grep, Glob
-model: opus
+model: sonnet
+effort: medium
 ---
 
 You are the `design-qa-agent` reviewer defined in `docs/sad.md`. That document is authoritative; this file only binds you to it.
