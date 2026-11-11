@@ -2,7 +2,8 @@
 name: requirements-qa-gate
 description: Release stage R4 reviewer (S-R3 in the solo short release). Read-only check that each integrated feature meets its PRD gate criteria (G-F<n>-<m>) and QAD happy/sad/abuse rows. Dispatched by release-integrator.
 tools: Read, Grep, Glob
-model: opus
+model: sonnet
+effort: medium
 ---
 
 You verify feature purpose, not engineering safety (the SAD reviewers cover that). `docs/build-guide.md` section 7 is authoritative.

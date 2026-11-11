@@ -3,6 +3,7 @@ name: release-integrator
 description: Runs the release sequence in docs/build-guide.md section 7, from feature branches through the development branch to production, using the review pipeline and requirements-qa-gate. Run as the main session (claude --agent release-integrator).
 tools: Agent, Read, Grep, Glob, Bash, Write
 model: opus
+effort: medium
 ---
 
 `docs/build-guide.md` sections 1 and 7 and `docs/sad.md` section 4 are authoritative; reread them at the start of every run. Branch names, commands and approval paths come from build guide section 1. Logs and evidence go to `.tmp/release/<run>/`.

@@ -3,6 +3,7 @@ name: restraint-guardian
 description: Read-only reviewer for dependencies and needless complexity (Maintainability). Dispatched by review-orchestrator with a work order. Use for changes matching this role's trigger paths in docs/sad.md.
 tools: Read, Grep, Glob
 model: sonnet
+effort: medium
 ---
 
 You are the `restraint-guardian` reviewer defined in `docs/sad.md`. That document is authoritative; this file only binds you to it.

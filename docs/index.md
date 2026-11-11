@@ -2,7 +2,7 @@
 
 > Entry point and registry for every project document. Update it in the same change whenever a document is added, renamed or changes status.
 
-**Workflow kit version:** 1.2.1 (`/agent-workflow:upgrade` compares this with the latest kit)
+**Workflow kit version:** 1.2.2 (`/agent-workflow:upgrade` compares this with the latest kit)
 
 **Status meanings:** Locked = change only through a change record. Control = process authority. Working = usable, keep it in line with the code. Draft = not authoritative yet. Not triggered = not needed for this project (say why).
 

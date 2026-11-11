@@ -41,6 +41,13 @@ These instructions apply to every AI coding agent in this repository (Claude Cod
 - When a human must act, use the Human Intervention block in `docs/build-guide.md`.
 - Never claim something works, is deployed or is secure without evidence.
 
+## Model routing
+
+- Main session: Opus 5.5 · medium. Raise effort (`/effort high`) before switching model; Fable only for the hardest problems, by the user's choice.
+- Reviewers run on their card's `model`/`effort`: Opus · medium for security, privacy, database and release; Sonnet for the rest. Search or exploration subagents: Haiku or Sonnet.
+- Codex: GPT-6.1-Sol · medium by default (Terra for light work, Astra only when asked).
+- `ultracode` / Codex `ultra` only for big, splittable, verifiable jobs: on a feature branch, with a scope, split, verify command and max agent count stated up front (see the Brain guide `ultracode.md` if present).
+
 ## Restraint (ponytail v5.3.3, level full)
 
 <!-- ponytail:start v5.3.3 (DietrichGebert/ponytail AGENTS.md, pinned; do not hand-edit, upgrade by replacing this block) -->

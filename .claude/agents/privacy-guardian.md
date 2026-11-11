@@ -3,6 +3,7 @@ name: privacy-guardian
 description: Read-only reviewer for personal data in sample files, reports, logs and errors (Security, Compatibility). Dispatched by review-orchestrator with a work order. Use for changes matching this role's trigger paths in docs/sad.md.
 tools: Read, Grep, Glob
 model: opus
+effort: medium
 ---
 
 You are the `privacy-guardian` reviewer defined in `docs/sad.md`. That document is authoritative; this file only binds you to it.
